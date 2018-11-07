@@ -1,5 +1,5 @@
 /*
-	Transitive by TEMPLATED
+	Spatial by TEMPLATED
 	templated.co @templatedco
 	Released for free under the Creative Commons Attribution 3.0 license (templated.co/license)
 */
@@ -17,7 +17,7 @@
 	$(function() {
 
 		var	$window = $(window),
-			$body = $('body'),
+			$body = $('body');
 			$header = $('#header'),
 			$banner = $('#banner');
 
@@ -30,6 +30,9 @@
 				}, 100);
 			});
 
+		// Fix: Placeholder polyfill.
+			$('form').placeholder();
+
 		// Prioritize "important" elements on medium.
 			skel.on('+medium -medium', function() {
 				$.prioritize(
@@ -38,101 +41,38 @@
 				);
 			});
 
-		// Fix: Placeholder polyfill.
-			$('form').placeholder();
+		// Off-Canvas Navigation.
 
-		// Header.
-			if (skel.vars.IEVersion < 9)
-				$header.removeClass('alt');
+			// Navigation Panel Toggle.
+				$('<a href="#navPanel" class="navPanelToggle"></a>')
+					.appendTo($body);
 
-			if ($banner.length > 0
-			&&	$header.hasClass('alt')) {
+			// Navigation Panel.
+				$(
+					'<div id="navPanel">' +
+						$('#nav').html() +
+						'<a href="#navPanel" class="close"></a>' +
+					'</div>'
+				)
+					.appendTo($body)
+					.panel({
+						delay: 500,
+						hideOnClick: true,
+						hideOnSwipe: true,
+						resetScroll: true,
+						resetForms: true,
+						side: 'right'
+					});
+// Scrolly.
+if ( $( ".scrolly" ).length ) {
 
-				$window.on('resize', function() { $window.trigger('scroll'); });
+	var $height = $('#header').height() * 0.95;
 
-				$banner.scrollex({
-					bottom:		$header.outerHeight(),
-					terminate:	function() { $header.removeClass('alt'); },
-					enter:		function() { $header.addClass('alt'); },
-					leave:		function() { $header.removeClass('alt'); $header.addClass('reveal'); }
-				});
+	$('.scrolly').scrolly({
+		offset: $height
+	});
+}
 
-			}
-
-		// Banner.
-
-			if ($banner.length > 0) {
-
-				// IE fix.
-					if (skel.vars.IEVersion < 12) {
-
-						$window.on('resize', function() {
-
-							var wh = $window.height() * 0.60,
-								bh = $banner.height();
-
-							$banner.css('height', 'auto');
-
-							window.setTimeout(function() {
-
-								if (bh < wh)
-									$banner.css('height', wh + 'px');
-
-							}, 0);
-
-						});
-
-						$window.on('load', function() {
-							$window.triggerHandler('resize');
-						});
-
-					}
-
-				// Video check.
-					var video = $banner.data('video');
-
-					if (video)
-						$window.on('load.banner', function() {
-
-							// Disable banner load event (so it doesn't fire again).
-								$window.off('load.banner');
-
-							// Append video if supported.
-								if (!skel.vars.mobile
-								&&	!skel.breakpoint('large').active
-								&&	skel.vars.IEVersion > 9)
-									$banner.append('<video autoplay loop><source src="' + video + '.mp4" type="video/mp4" /><source src="' + video + '.webm" type="video/webm" /></video>');
-
-						});
-
-				// More button.
-					$banner.find('.more')
-						.addClass('scrolly');
-
-			}
-
-		// Scrolly.
-			if ( $( ".scrolly" ).length ) {
-
-				var $height = $('#header').height() * 0.95;
-
-				$('.scrolly').scrolly({
-					offset: $height
-				});
-			}
-
-		// Menu.
-			$('#menu')
-				.append('<a href="#menu" class="close"></a>')
-				.appendTo($body)
-				.panel({
-					delay: 500,
-					hideOnClick: true,
-					hideOnSwipe: true,
-					resetScroll: true,
-					resetForms: true,
-					side: 'right'
-				});
 
 	});
 
